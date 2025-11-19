@@ -1,11 +1,9 @@
 // components/Activities/TransportForm.jsx
 import { useState } from 'react'
-// Make sure this path is correct for your carbonCalculator
 import { calculateCarbon } from '../../utils/carbonCalculator'
 import { supabase } from '../../supabaseClient'
 
 export default function TransportForm({ user, onActivityLogged }) {
-  // Updated states to match emissionFactors.json
   const [mode, setMode] = useState('car')
   const [distance, setDistance] = useState('')
   const [loading, setLoading] = useState(false)
@@ -19,7 +17,6 @@ export default function TransportForm({ user, onActivityLogged }) {
       distance: parseFloat(distance)
     }
     
-    // This utility function needs to exist and match these keys
     const carbon = calculateCarbon('transport', activityData)
     
     const { error } = await supabase.from('activities').insert([
@@ -28,15 +25,22 @@ export default function TransportForm({ user, onActivityLogged }) {
         type: 'transport', 
         data: activityData, 
         carbon_kg: carbon,
-        category: 'Transport' // ⬅️ THIS IS THE FIX
+        category: 'Transport'
       }
     ])
     
     if (!error) {
-      // alert('Transport activity logged!') // Replaced alert with callback
+      // Clear the form
       setDistance('')
       setMode('car')
-      if (onActivityLogged) onActivityLogged() // Optional: refresh dashboard
+      
+      // Show success message
+      alert('Transport activity logged successfully! 🚗')
+      
+      // Refresh the activities list (FIXED PART)
+      if (onActivityLogged) {
+        onActivityLogged()
+      }
     } else {
       alert('Error: ' + error.message)
     }

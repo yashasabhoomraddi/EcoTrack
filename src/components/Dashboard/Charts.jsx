@@ -1,59 +1,29 @@
-import { Line, Bar, Doughnut } from 'react-chartjs-2'
+import React from 'react'
+import { PolarArea, Bar, Doughnut } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
   ArcElement,
+  RadialLinearScale,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js'
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
   ArcElement,
+  RadialLinearScale,
   Title,
   Tooltip,
   Legend
 )
 
 export default function Charts({ activities }) {
-  // Get last 7 days of data
-  const getLast7Days = () => {
-    const days = []
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date()
-      date.setDate(date.getDate() - i)
-      days.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))
-    }
-    return days
-  }
-
-  // Calculate carbon per day for last 7 days
-  const getCarbonPerDay = () => {
-    const days = getLast7Days()
-    const carbonData = days.map(day => {
-      const dayActivities = activities.filter(activity => {
-        const activityDate = new Date(activity.created_at).toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric' 
-        })
-        return activityDate === day
-      })
-      return dayActivities.reduce((sum, a) => sum + (parseFloat(a.carbon_kg) || 0), 0)
-    })
-    return carbonData
-  }
-
-  // Calculate carbon by activity type
   const getCarbonByType = () => {
     const types = ['transport', 'meal', 'energy', 'waste']
     return types.map(type => {
@@ -62,22 +32,30 @@ export default function Charts({ activities }) {
     })
   }
 
-  // Line Chart Data - Carbon over last 7 days
-  const lineChartData = {
-    labels: getLast7Days(),
+  // Polar Area Chart Data - Carbon Impact by Type
+  const polarAreaData = {
+    labels: ['Transport', 'Meals', 'Energy', 'Waste'],
     datasets: [
       {
-        label: 'Carbon Footprint (kg CO₂)',
-        data: getCarbonPerDay(),
-        borderColor: 'rgb(76, 175, 80)',
-        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-        tension: 0.4,
-        fill: true,
+        label: 'Carbon Impact (kg CO₂)',
+        data: getCarbonByType(),
+        backgroundColor: [
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(245, 158, 11, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
+        ],
+        borderColor: [
+          'rgb(34, 197, 94)',
+          'rgb(59, 130, 246)',
+          'rgb(245, 158, 11)',
+          'rgb(239, 68, 68)',
+        ],
+        borderWidth: 2,
       },
     ],
   }
 
-  // Bar Chart Data - Carbon by activity type
   const barChartData = {
     labels: ['Transport', 'Meals', 'Energy', 'Waste'],
     datasets: [
@@ -85,21 +63,27 @@ export default function Charts({ activities }) {
         label: 'Carbon by Type (kg CO₂)',
         data: getCarbonByType(),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.7)',
-          'rgba(54, 162, 235, 0.7)',
-          'rgba(255, 206, 86, 0.7)',
-          'rgba(75, 192, 192, 0.7)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(245, 158, 11, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
         ],
+        borderColor: [
+          'rgb(34, 197, 94)',
+          'rgb(59, 130, 246)',
+          'rgb(245, 158, 11)',
+          'rgb(239, 68, 68)',
+        ],
+        borderWidth: 2,
       },
     ],
   }
 
-  // Doughnut Chart Data - Activity distribution
   const doughnutChartData = {
     labels: ['Transport', 'Meals', 'Energy', 'Waste'],
     datasets: [
       {
-        label: 'Activities',
+        label: 'Activity Distribution',
         data: [
           activities.filter(a => a.type === 'transport').length,
           activities.filter(a => a.type === 'meal').length,
@@ -107,47 +91,107 @@ export default function Charts({ activities }) {
           activities.filter(a => a.type === 'waste').length,
         ],
         backgroundColor: [
-          'rgba(255, 99, 132, 0.8)',
-          'rgba(54, 162, 235, 0.8)',
-          'rgba(255, 206, 86, 0.8)',
-          'rgba(75, 192, 192, 0.8)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(245, 158, 11, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
         ],
+        borderWidth: 2,
       },
     ],
   }
 
+  // Improved Chart Options with larger text
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',
+        labels: {
+          font: {
+            size: 14,
+            weight: 'bold'
+          },
+          padding: 20
+        }
+      },
+      title: {
+        display: true,
+        font: {
+          size: 16,
+          weight: 'bold'
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          font: {
+            size: 12
+          }
+        }
+      },
+      x: {
+        ticks: {
+          font: {
+            size: 12
+          }
+        }
+      }
+    }
+  }
+
+  const polarAreaOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            size: 14,
+            weight: 'bold'
+          },
+          padding: 20
+        }
       },
     },
+    scales: {
+      r: {
+        ticks: {
+          display: false
+        }
+      }
+    }
   }
 
   return (
     <div className="charts-container">
-      <h2>Analytics & Insights</h2>
+      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Analytics & Insights</h2>
       
-      <div className="chart-grid">
-        <div className="chart-card">
-          <h3>Carbon Footprint Trend (Last 7 Days)</h3>
-          <div className="chart-wrapper">
-            <Line data={lineChartData} options={chartOptions} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* NEW: Polar Area Chart - Carbon Impact */}
+        <div className="chart-card bg-white rounded-2xl shadow-lg border border-green-100 p-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">Carbon Impact by Type</h3>
+          <div className="chart-wrapper" style={{ height: '300px' }}>
+            <PolarArea data={polarAreaData} options={polarAreaOptions} />
           </div>
         </div>
 
-        <div className="chart-card">
-          <h3>Carbon by Activity Type</h3>
-          <div className="chart-wrapper">
+        {/* Bar Chart - Carbon by Type */}
+        <div className="chart-card bg-white rounded-2xl shadow-lg border border-green-100 p-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">Carbon by Activity Type</h3>
+          <div className="chart-wrapper" style={{ height: '300px' }}>
             <Bar data={barChartData} options={chartOptions} />
           </div>
         </div>
 
-        <div className="chart-card">
-          <h3>Activity Distribution</h3>
-          <div className="chart-wrapper">
+        {/* Doughnut Chart - Activity Distribution */}
+        <div className="chart-card bg-white rounded-2xl shadow-lg border border-green-100 p-6 lg:col-span-2">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">Activity Distribution</h3>
+          <div className="chart-wrapper" style={{ height: '300px' }}>
             <Doughnut data={doughnutChartData} options={chartOptions} />
           </div>
         </div>
