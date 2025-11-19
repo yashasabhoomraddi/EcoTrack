@@ -1,0 +1,29 @@
+{
+  "name": "ecotrack",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "start": "vite preview --host 0.0.0.0 --port 5173"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.23.24",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.13",
+    "vite": "^7.2.2"
+  }
+}

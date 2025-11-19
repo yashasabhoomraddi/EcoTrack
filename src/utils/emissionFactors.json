@@ -1,0 +1,22 @@
+
+{
+  "transport": {
+    "car": 0.17,
+    "bus": 0.08,
+    "train": 0.04,
+    "walk": 0,
+    "bike": 0
+  },
+  "meals": {
+    "red_meat": 2.5,
+    "chicken": 0.5,
+    "plant_based": 0.2,
+    "processed": 0.7
+  },
+  "energy": {
+    "electricity_kwh": 0.45
+  },
+  "waste": {
+    "landfill_kg": 0.5
+  }
+}
