@@ -12,5 +12,10 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     allowedHosts: true // Allows all hosts
+  },
+  base: '/', // ← ADD THIS LINE
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets'
   }
 })
