@@ -10,14 +10,7 @@ export default function Auth() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    supabase.auth.getSession().then((res) => {
-      if (res?.data?.session) window.location.replace("/dashboard")
-    })
-
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) window.location.replace("/dashboard")
-    })
-    return () => sub?.subscription?.unsubscribe?.()
+    // Session is handled by App.jsx, no need to redirect here
   }, [])
 
   const validate = () => {
@@ -80,7 +73,7 @@ export default function Auth() {
               <span className="text-2xl font-bold text-green-800">EcoTrack</span>
             </div>
             <div className="hidden lg:block">
-              <button 
+              <button
                 onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
                 className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
               >
@@ -105,10 +98,10 @@ export default function Auth() {
               <span className="text-green-600">Live greener.</span>
             </h1>
             <p className="text-xl text-gray-600 leading-relaxed">
-              Cloud-powered carbon tracking tailored for modern living. Monitor your footprint, 
+              Cloud-powered carbon tracking tailored for modern living. Monitor your footprint,
               get personalized insights, and build sustainable habits — all in one clean dashboard.
             </p>
-            
+
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
@@ -148,8 +141,8 @@ export default function Auth() {
                 {mode === "signup" ? "Start your green journey" : "Welcome back"}
               </h2>
               <p className="text-gray-600 mt-2">
-                {mode === "signup" 
-                  ? "Create your account and start tracking your carbon footprint today." 
+                {mode === "signup"
+                  ? "Create your account and start tracking your carbon footprint today."
                   : "Sign in to continue to your dashboard."
                 }
               </p>
@@ -187,11 +180,10 @@ export default function Auth() {
               </div>
 
               {error && (
-                <div className={`p-3 rounded-lg text-sm ${
-                  error.includes("successful") 
-                    ? "bg-green-100 text-green-700" 
+                <div className={`p-3 rounded-lg text-sm ${error.includes("successful")
+                    ? "bg-green-100 text-green-700"
                     : "bg-red-100 text-red-700"
-                }`}>
+                  }`}>
                   {error}
                 </div>
               )}
@@ -210,15 +202,15 @@ export default function Auth() {
             <div className="text-center mt-6 text-sm text-gray-600">
               {mode === "signup" ? (
                 <>Already have an account?{" "}
-                <button onClick={() => setMode("signin")} className="text-green-600 font-semibold hover:underline">
-                  Sign in
-                </button>
+                  <button onClick={() => setMode("signin")} className="text-green-600 font-semibold hover:underline">
+                    Sign in
+                  </button>
                 </>
               ) : (
                 <>Don't have an account?{" "}
-                <button onClick={() => setMode("signup")} className="text-green-600 font-semibold hover:underline">
-                  Create one
-                </button>
+                  <button onClick={() => setMode("signup")} className="text-green-600 font-semibold hover:underline">
+                    Create one
+                  </button>
                 </>
               )}
             </div>
